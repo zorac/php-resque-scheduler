@@ -2,18 +2,20 @@
 
 namespace Resque\Scheduler;
 
+use \DateTime;
+use \Resque\Event;
 use \Resque\Scheduler;
 
 /**
  * ResqueScheduler worker to handle scheduling of delayed tasks.
  *
- * @package		ResqueScheduler
- * @author		Chris Boulton <chris@bigcommerce.com> (Original)
- * @author      Wan Qi Chen <kami@kamisama.me>
- * @copyright	(c) 2012 Chris Boulton
- * @license		http://www.opensource.org/licenses/mit-license.php
+ * @package   ResqueScheduler
+ * @author    Chris Boulton <chris@bigcommerce.com> (Original)
+ * @author    Wan Qi Chen <kami@kamisama.me>
+ * @copyright (c) 2012 Chris Boulton
+ * @license   http://www.opensource.org/licenses/mit-license.php
  */
-class Worker extends \Resque_Worker
+class Worker extends \Resque\Worker
 {
     /**
      * @var int Interval to sleep for between checking schedules.
@@ -94,7 +96,7 @@ class Worker extends \Resque_Worker
                 ),
                 self::LOG_TYPE_INFO
             );
-            \Resque_Event::trigger(
+            Event::trigger(
                 'beforeDelayedEnqueue',
                 array(
                     'queue' => $item['queue'],
@@ -104,7 +106,7 @@ class Worker extends \Resque_Worker
             );
 
             $payload = array_merge(array($item['queue'], $item['class']), $item['args'], array($item['track']));
-            call_user_func_array('\Resque::enqueue', $payload);
+            call_user_func_array('\\Resque\\Resque::enqueue', $payload);
         }
     }
 
@@ -134,8 +136,6 @@ class Worker extends \Resque_Worker
      */
     protected function updateProcLine($status)
     {
-        if (function_exists('setproctitle')) {
-            setproctitle('resque-scheduler: ' . $status);
-        }
+        cli_set_process_title('resque-scheduler: ' . $status);
     }
 }

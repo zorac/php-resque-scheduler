@@ -1,34 +1,35 @@
 {
-	"name": "zorac/php-resque-ex-scheduler",
-	"type": "library",
-	"description": "php-resque-ex-scheduler is a PHP port of resque-scheduler, which adds support for scheduling jobs to PHP-Resque.",
-	"keywords": ["job", "background", "redis", "resque", "queue", "php", "schedule"],
-	"homepage": "http://www.github.com/zorac/php-resque-ex-scheduler/",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Chris Boulton",
-			"email": "chris@bigcommerce.com"
-		},
-		{
-			"name": "Wan Qi chen",
-			"email": "kami@kamisama.me",
-			"homepage": "http://www.kamisama.me"
-		}
-	],
-	"autoload": {
-		"psr-0": {
-			"ResqueScheduler": "lib"
-		}
-	},
-	"bin": [
-		"bin/resque-scheduler"
-	],
-	"require": {
-		"zorac/php-resque-ex": "dev-master"
-	},
-	"conflict": {
-		"chrisboulton/php-resque-scheduler": "*",
-		"kamisama/php-resque-ex-scheduler": "*"
-	}
+    "name": "zorac/php-resque-ex-scheduler",
+    "type": "library",
+    "description": "php-resque-ex-scheduler is a PHP port of resque-scheduler, which adds support for scheduling jobs to PHP-Resque.",
+    "keywords": ["job", "background", "redis", "resque", "queue", "php", "schedule"],
+    "homepage": "http://www.github.com/zorac/php-resque-ex-scheduler/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Chris Boulton",
+            "email": "chris@bigcommerce.com"
+        },
+        {
+            "name": "Wan Qi chen",
+            "email": "kami@kamisama.me",
+            "homepage": "http://www.kamisama.me"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Resque\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/resque-scheduler"
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "zorac/php-resque-ex": "dev-master"
+    },
+    "conflict": {
+        "chrisboulton/php-resque-scheduler": "*",
+        "kamisama/php-resque-ex-scheduler": "*"
+    }
 }

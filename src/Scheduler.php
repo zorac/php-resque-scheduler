@@ -2,17 +2,21 @@
 
 namespace Resque;
 
+use \DateTime;
+use \Resque\Event;
+use \Resque\Resque;
+use \Resque\ResqueException;
 use \Resque\Scheduler\InvalidTimestampException;
 use \Resque\Scheduler\Job\Status;
 
 /**
 * ResqueScheduler core class to handle scheduling of jobs in the future.
 *
-* @package		ResqueScheduler
-* @author		Chris Boulton <chris@bigcommerce.com> (Original)
-* @author      Wan Qi Chen <kami@kamisama.me>
-* @copyright	(c) 2012 Chris Boulton
-* @license		http://www.opensource.org/licenses/mit-license.php
+* @package   ResqueScheduler
+* @author    Chris Boulton <chris@bigcommerce.com> (Original)
+* @author    Wan Qi Chen <kami@kamisama.me>
+* @copyright (c) 2012 Chris Boulton
+* @license   http://www.opensource.org/licenses/mit-license.php
 */
 class Scheduler
 {
@@ -26,12 +30,12 @@ class Scheduler
      * Identical to Resque::enqueue, however the first argument is the number
      * of seconds before the job should be executed.
      *
-     * @param   int     $in             Number of seconds from now when the job should be executed.
-     * @param   string  $queue          The name of the queue to place the job in.
-     * @param   string  $class          The name of the class that contains the code to execute the job.
-     * @param   array   $args           Any optional arguments that should be passed when the job is executed.
-     * @param   boolean $trackStatus    Set to true to be able to monitor the status of a job.
-     * @return  string                  Job ID
+     * @param   int     $in          Number of seconds from now when the job should be executed.
+     * @param   string  $queue       The name of the queue to place the job in.
+     * @param   string  $class       The name of the class that contains the code to execute the job.
+     * @param   array   $args        Any optional arguments that should be passed when the job is executed.
+     * @param   boolean $trackStatus Set to true to be able to monitor the status of a job.
+     * @return  string               Job ID
      */
     public static function enqueueIn($in, $queue, $class, array $args = array(), $trackStatus = false)
     {
@@ -45,18 +49,18 @@ class Scheduler
      * (either UNIX timestamp in integer format or an instance of the DateTime
      * class in PHP).
      *
-     * @param   DateTime|int $at            Instance of PHP DateTime object or int of UNIX timestamp.
-     * @param   string       $queue         The name of the queue to place the job in.
-     * @param   string       $class         The name of the class that contains the code to execute the job.
-     * @param   array        $args          Any optional arguments that should be passed when the job is executed.
-     * @param   boolean      $trackStatus   Set to true to be able to monitor the status of a job.
-     * @return  string                      Job ID
+     * @param   DateTime|int $at          Instance of PHP DateTime object or int of UNIX timestamp.
+     * @param   string       $queue       The name of the queue to place the job in.
+     * @param   string       $class       The name of the class that contains the code to execute the job.
+     * @param   array        $args        Any optional arguments that should be passed when the job is executed.
+     * @param   boolean      $trackStatus Set to true to be able to monitor the status of a job.
+     * @return  string                    Job ID
      */
     public static function enqueueAt($at, $queue, $class, $args = array(), $trackStatus = false)
     {
         self::validateJob($class, $queue);
 
-        $args['id'] = md5(uniqid('', true));
+        $args['id'] = Resque::generateJobId();
         $args['s_time'] = time();
         $job = self::jobToHash($queue, $class, $args, $trackStatus);
         self::delayedPush($at, $job);
@@ -65,7 +69,7 @@ class Scheduler
             Status::create($args['id'], Status::STATUS_SCHEDULED);
         }
 
-        \Resque_Event::trigger(
+        Event::trigger(
             'afterSchedule',
             array(
                 'at'    => $at,
@@ -87,7 +91,7 @@ class Scheduler
     public static function delayedPush($timestamp, $item)
     {
         $timestamp = self::getTimestamp($timestamp);
-        $redis = \Resque::redis();
+        $redis = Resque::redis();
         $redis->rpush(self::QUEUE_NAME . ':' . $timestamp, json_encode($item));
 
         $redis->zadd(self::QUEUE_NAME, $timestamp, $timestamp);
@@ -100,7 +104,7 @@ class Scheduler
      */
     public static function getDelayedQueueScheduleSize()
     {
-        return (int) \Resque::redis()->zcard(self::QUEUE_NAME);
+        return (int) Resque::redis()->zcard(self::QUEUE_NAME);
     }
 
     /**
@@ -113,7 +117,7 @@ class Scheduler
     {
         $timestamp = self::getTimestamp($timestamp);
 
-        return \Resque::redis()->llen(self::QUEUE_NAME . ':' . $timestamp, $timestamp);
+        return Resque::redis()->llen(self::QUEUE_NAME . ':' . $timestamp, $timestamp);
     }
 
     /**
@@ -135,7 +139,7 @@ class Scheduler
     {
         $destroyed=0;
         $item = json_encode(self::jobToHash($queue, $class, $args));
-        $redis = \Resque::redis();
+        $redis = Resque::redis();
 
         foreach ($redis->keys(self::QUEUE_NAME . ':*') as $key) {
             $key = $redis->removePrefix($key);
@@ -162,7 +166,7 @@ class Scheduler
     {
         $key = self::QUEUE_NAME . ':' . self::getTimestamp($timestamp);
         $item = json_encode(self::jobToHash($queue, $class, $args));
-        $redis = \Resque::redis();
+        $redis = Resque::redis();
         $count = $redis->lrem($key, 0, $item);
         self::cleanupTimestamp($key, $timestamp);
 
@@ -199,7 +203,7 @@ class Scheduler
     private static function cleanupTimestamp($key, $timestamp)
     {
         $timestamp = self::getTimestamp($timestamp);
-        $redis = \Resque::redis();
+        $redis = Resque::redis();
 
         if ($redis->llen($key) == 0) {
             $redis->del($key);
@@ -210,13 +214,13 @@ class Scheduler
     /**
      * Convert a timestamp in some format in to a unix timestamp as an integer.
      *
-     * @param  DateTime|int                              $timestamp Instance of DateTime or UNIX timestamp.
-     * @return int                                       Timestamp
+     * @param  DateTime|int $timestamp Instance of DateTime or UNIX timestamp.
+     * @return int          Timestamp
      * @throws InvalidTimestampException
      */
     private static function getTimestamp($timestamp)
     {
-        if ($timestamp instanceof \DateTime) {
+        if ($timestamp instanceof DateTime) {
             $timestamp = $timestamp->getTimestamp();
         }
 
@@ -239,7 +243,7 @@ class Scheduler
      *
      * @param DateTime|int $timestamp Instance of DateTime or UNIX timestamp.
      *                                Defaults to now.
-     * @return int|false UNIX timestamp, or false if nothing to run.
+     * @return int|false              UNIX timestamp, or false if nothing to run.
      */
     public static function nextDelayedTimestamp($at = null)
     {
@@ -249,7 +253,7 @@ class Scheduler
             $at = self::getTimestamp($at);
         }
 
-        $items = \Resque::redis()->zrangebyscore(self::QUEUE_NAME, '-inf', $at, array('limit', 0, 1));
+        $items = Resque::redis()->zrangebyscore(self::QUEUE_NAME, '-inf', $at, array('limit', 0, 1));
         if (!empty($items)) {
             return $items[0];
         }
@@ -268,7 +272,7 @@ class Scheduler
         $timestamp = self::getTimestamp($timestamp);
         $key = self::QUEUE_NAME . ':' . $timestamp;
 
-        $item = json_decode(\Resque::redis()->lpop($key), true);
+        $item = json_decode(Resque::redis()->lpop($key), true);
 
         self::cleanupTimestamp($key, $timestamp);
 
@@ -278,16 +282,16 @@ class Scheduler
     /**
      * Ensure that supplied job class/queue is valid.
      *
-     * @param  string           $class Name of job class.
-     * @param  string           $queue Name of queue.
-     * @throws Resque_Exception
+     * @param  string $class Name of job class.
+     * @param  string $queue Name of queue.
+     * @throws ResqueException
      */
     private static function validateJob($class, $queue)
     {
         if (empty($class)) {
-            throw new \Resque_Exception('Jobs must be given a class.');
+            throw new ResqueException('Jobs must be given a class.');
         } elseif (empty($queue)) {
-            throw new \Resque_Exception('Jobs must be put in a queue.');
+            throw new ResqueException('Jobs must be put in a queue.');
         }
 
         return true;

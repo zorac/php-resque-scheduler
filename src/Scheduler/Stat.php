@@ -5,13 +5,13 @@ namespace Resque\Scheduler;
 /**
  * Resque statistic management (jobs processed, failed, etc)
  *
- * @package     ResqueScheduler
- * @subpackage  ResqueScheduler.Stat
- * @author      Chris Boulton <chris@bigcommerce.com> (Original)
- * @author      Wan Qi Chen <kami@kamisama.me>
- * @license     http://www.opensource.org/licenses/mit-license.php
+ * @package    ResqueScheduler
+ * @subpackage ResqueScheduler.Stat
+ * @author     Chris Boulton <chris@bigcommerce.com> (Original)
+ * @author     Wan Qi Chen <kami@kamisama.me>
+ * @license    http://www.opensource.org/licenses/mit-license.php
  */
-class Stat extends \Resque_Stat
+class Stat extends \Resque\Stat
 {
     const KEYNAME = 'schdlr';
 
@@ -29,8 +29,8 @@ class Stat extends \Resque_Stat
     /**
      * Increment the value of the specified statistic by a certain amount (default is 1)
      *
-     * @param string $stat The name of the statistic to increment.
-     * @param int $by The amount to increment the statistic by.
+     * @param string   $stat The name of the statistic to increment.
+     * @param int      $by The amount to increment the statistic by.
      * @return boolean True if successful, false if not.
      */
     public static function incr($stat = self::KEYNAME, $by = 1)
@@ -41,8 +41,8 @@ class Stat extends \Resque_Stat
     /**
      * Decrement the value of the specified statistic by a certain amount (default is 1)
      *
-     * @param string $stat The name of the statistic to decrement.
-     * @param int $by The amount to decrement the statistic by.
+     * @param string   $stat The name of the statistic to decrement.
+     * @param int      $by The amount to decrement the statistic by.
      * @return boolean True if successful, false if not.
      */
     public static function decr($stat = self::KEYNAME, $by = 1)
@@ -53,7 +53,7 @@ class Stat extends \Resque_Stat
     /**
      * Delete a statistic with the given name.
      *
-     * @param string $stat The name of the statistic to delete.
+     * @param string   $stat The name of the statistic to delete.
      * @return boolean True if successful, false if not.
      */
     public static function clear($stat = self::KEYNAME)
