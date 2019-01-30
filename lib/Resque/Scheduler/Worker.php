@@ -1,4 +1,9 @@
 <?php
+
+namespace Resque\Scheduler;
+
+use \Resque\Scheduler;
+
 /**
  * ResqueScheduler worker to handle scheduling of delayed tasks.
  *
@@ -8,12 +13,8 @@
  * @copyright	(c) 2012 Chris Boulton
  * @license		http://www.opensource.org/licenses/mit-license.php
  */
-
-namespace ResqueScheduler;
-
 class Worker extends \Resque_Worker
 {
-
     /**
      * @var int Interval to sleep for between checking schedules.
      */
@@ -58,7 +59,7 @@ class Worker extends \Resque_Worker
      */
     public function handleDelayedItems($timestamp = null)
     {
-        while (($timestamp = ResqueScheduler::nextDelayedTimestamp($timestamp)) !== false) {
+        while (($timestamp = Scheduler::nextDelayedTimestamp($timestamp)) !== false) {
             $this->updateProcLine('Processing Delayed Items');
             $this->enqueueDelayedItemsForTimestamp($timestamp);
         }
@@ -75,7 +76,7 @@ class Worker extends \Resque_Worker
     public function enqueueDelayedItemsForTimestamp($timestamp)
     {
         $item = null;
-        while ($item = ResqueScheduler::nextItemForTimestamp($timestamp)) {
+        while ($item = Scheduler::nextItemForTimestamp($timestamp)) {
             $this->log(
                 array(
                 'message' => 'Moving scheduled job ' . strtoupper($item['class']) . ' to ' . strtoupper($item['queue']),

@@ -1,4 +1,10 @@
 <?php
+
+namespace Resque;
+
+use \Resque\Scheduler\InvalidTimestampException;
+use \Resque\Scheduler\Job\Status;
+
 /**
 * ResqueScheduler core class to handle scheduling of jobs in the future.
 *
@@ -8,9 +14,7 @@
 * @copyright	(c) 2012 Chris Boulton
 * @license		http://www.opensource.org/licenses/mit-license.php
 */
-namespace ResqueScheduler;
-
-class ResqueScheduler
+class Scheduler
 {
     // Name of the scheduler queue
     // Should be as unique as possible
@@ -58,7 +62,7 @@ class ResqueScheduler
         self::delayedPush($at, $job);
 
         if ($trackStatus) {
-            \Resque_Job_Status::create($args['id'], Job\Status::STATUS_SCHEDULED);
+            Status::create($args['id'], Status::STATUS_SCHEDULED);
         }
 
         \Resque_Event::trigger(
@@ -208,7 +212,7 @@ class ResqueScheduler
      *
      * @param  DateTime|int                              $timestamp Instance of DateTime or UNIX timestamp.
      * @return int                                       Timestamp
-     * @throws ResqueScheduler_InvalidTimestampException
+     * @throws InvalidTimestampException
      */
     private static function getTimestamp($timestamp)
     {
@@ -217,7 +221,7 @@ class ResqueScheduler
         }
 
         if ((int) $timestamp != $timestamp) {
-            throw new ResqueScheduler\InvalidTimestampException(
+            throw new InvalidTimestampException(
                 'The supplied timestamp value could not be converted to an integer.'
             );
         }

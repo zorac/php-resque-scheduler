@@ -45,9 +45,9 @@ $LOGGING = getenv('LOGGING');
 $VERBOSE = getenv('VERBOSE');
 $VVERBOSE = getenv('VVERBOSE');
 if (!empty($LOGGING) || !empty($VERBOSE)) {
-    $logLevel = ResqueScheduler\Worker::LOG_NORMAL;
+    $logLevel = Resque\Scheduler\Worker::LOG_NORMAL;
 } elseif (!empty($VVERBOSE)) {
-    $logLevel = ResqueScheduler\Worker::LOG_VERBOSE;
+    $logLevel = Resque\Scheduler\Worker::LOG_VERBOSE;
 }
 
 // Load the user's application if one exists
@@ -72,7 +72,7 @@ if(!empty($PREFIX)) {
     Resque_Redis::prefix($PREFIX);
 }
 
-$worker = new ResqueScheduler\Worker(ResqueScheduler\ResqueScheduler::QUEUE_NAME);
+$worker = new Resque\Scheduler\Worker(Resque\Scheduler::QUEUE_NAME);
 $worker->registerLogger($logger);
 $worker->logLevel = $logLevel;
 

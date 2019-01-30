@@ -1,4 +1,7 @@
 <?php
+
+namespace Resque\Scheduler;
+
 /**
  * Resque statistic management (jobs processed, failed, etc)
  *
@@ -8,8 +11,6 @@
  * @author      Wan Qi Chen <kami@kamisama.me>
  * @license     http://www.opensource.org/licenses/mit-license.php
  */
-namespace ResqueScheduler;
-
 class Stat extends \Resque_Stat
 {
     const KEYNAME = 'schdlr';

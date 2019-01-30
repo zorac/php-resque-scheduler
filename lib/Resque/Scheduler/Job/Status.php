@@ -1,4 +1,7 @@
 <?php
+
+namespace Resque\Scheduler\Job;
+
 /**
  * Status tracker/information for a job.
  *
@@ -8,8 +11,6 @@
  * @copyright   Copyright 2013, Wan Qi Chen <kami@kamisama.me>
  * @license     MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-namespace ResqueScheduler\Job;
-
 class Status extends \Resque_Job_Status
 {
     const STATUS_SCHEDULED = 63;
