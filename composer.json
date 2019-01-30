@@ -21,6 +21,9 @@
 			"ResqueScheduler": "lib"
 		}
 	},
+	"bin": [
+		"bin/resque-scheduler"
+	],
 	"require": {
 		"zorac/php-resque-ex": "dev-master"
 	},
