@@ -1,13 +1,14 @@
 {
-	"name": "kamisama/php-resque-ex-scheduler",
+	"name": "zorac/php-resque-ex-scheduler",
 	"type": "library",
 	"description": "php-resque-ex-scheduler is a PHP port of resque-scheduler, which adds support for scheduling jobs to PHP-Resque.",
-	"keywords": ["job", "background", "redis", "resque", "queue", "php", "schedule", "cron"],
-	"homepage": "http://www.github.com/kamisama/php-resque-ex-scheduler/",
+	"keywords": ["job", "background", "redis", "resque", "queue", "php", "schedule"],
+	"homepage": "http://www.github.com/zorac/php-resque-ex-scheduler/",
 	"license": "MIT",
 	"authors": [
 		{
-			"name": "Chris Boulton"
+			"name": "Chris Boulton",
+			"email": "chris@bigcommerce.com"
 		},
 		{
 			"name": "Wan Qi chen",
@@ -20,12 +21,11 @@
 			"ResqueScheduler": "lib"
 		}
 	},
-	"support": {
-		"email": "kami@kamisama.me",
-		"issues": "https://github.com/kamisama/php-resque-ex-scheduler/issues",
-		"source": "https://github.com/kamisama/php-resque-ex-scheduler"
-	},
 	"require": {
-		"kamisama/php-resque-ex": ">=1.2.1"
+		"zorac/php-resque-ex": "dev-master"
+	},
+	"conflict": {
+		"chrisboulton/php-resque-scheduler": "*",
+		"kamisama/php-resque-ex-scheduler": "*"
 	}
 }
