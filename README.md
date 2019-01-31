@@ -1,12 +1,12 @@
-php-resque-scheduler: PHP Resque Scheduler
-==========================================
+PHP Resque Scheduler
+====================
 
-php-resque-scheduler is a PHP port of [resque-scheduler](http://github.com/defunkt/resque),
+php-resque-scheduler is a PHP port of [resque-scheduler](https://github.com/defunkt/resque),
 which adds support for scheduling items in the future to Resque.
 
 The PHP port of resque-scheduler has been designed to be an almost direct-copy
-of the Ruby plugin, and is designed to work with the PHP port of resque,
-[php-resque](http://github.com/chrisboulton/php-resque).
+of the Ruby plugin, and is designed to work with a PHP port of resque,
+[php-resque](https://github.com/zorac/php-resque).
 
 At the moment, php-resque-scheduler only supports delayed jobs, which is the
 ability to push a job to the queue and have it run at a certain timestamp, or
@@ -100,5 +100,6 @@ of the job, the class name of the job, and the job's arguments.
 
 ## Contributors ##
 
-* chrisboulton
-* Wan Qi Chen (Kamisama)
+* chrisboulton -- original [php-resque-scheduler](https://github.com/chrisboulton/php-resque-scheduler/)
+* Wan Qi Chen (Kamisama) -- [php-resque-ex-schduler](https://github.com/wa0x6e/php-resque-ex-scheduler)
+* zorac -- this fork

@@ -136,6 +136,6 @@ class Worker extends \Resque\Worker
      */
     protected function updateProcLine($status)
     {
-        cli_set_process_title('resque-scheduler: ' . $status);
+        cli_set_process_title('resque-scheduler-' . Scheduler::VERSION . ': ' . $status);
     }
 }

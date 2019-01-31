@@ -20,6 +20,8 @@ use \Resque\Scheduler\Job\Status;
 */
 class Scheduler
 {
+    const VERSION = "2.0.0";
+
     // Name of the scheduler queue
     // Should be as unique as possible
     const QUEUE_NAME = '_schdlr_';
