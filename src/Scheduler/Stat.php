@@ -2,6 +2,8 @@
 
 namespace Resque\Scheduler;
 
+use \Resque\Stat as ResqueStat;
+
 /**
  * Resque statistic management (jobs processed, failed, etc)
  *
@@ -11,7 +13,7 @@ namespace Resque\Scheduler;
  * @author     Wan Qi Chen <kami@kamisama.me>
  * @license    http://www.opensource.org/licenses/mit-license.php
  */
-class Stat extends \Resque\Stat
+class Stat extends ResqueStat
 {
     const KEYNAME = 'schdlr';
 
@@ -19,9 +21,9 @@ class Stat extends \Resque\Stat
      * Get the value of the supplied statistic counter for the specified statistic.
      *
      * @param string $stat The name of the statistic to get the stats for.
-     * @return mixed Value of the statistic.
+     * @return int Value of the statistic.
      */
-    public static function get($stat = self::KEYNAME)
+    public static function get(string $stat = self::KEYNAME) : int
     {
         return parent::get($stat);
     }
@@ -29,34 +31,38 @@ class Stat extends \Resque\Stat
     /**
      * Increment the value of the specified statistic by a certain amount (default is 1)
      *
-     * @param string   $stat The name of the statistic to increment.
-     * @param int      $by The amount to increment the statistic by.
-     * @return boolean True if successful, false if not.
+     * @param string $stat The name of the statistic to increment.
+     * @param int $by The amount to increment the statistic by.
+     * @return bool True if successful, false if not.
      */
-    public static function incr($stat = self::KEYNAME, $by = 1)
-    {
+    public static function incr(
+        string $stat = self::KEYNAME,
+        int $by = 1
+    ) : bool {
         return parent::incr($stat, $by);
     }
 
     /**
      * Decrement the value of the specified statistic by a certain amount (default is 1)
      *
-     * @param string   $stat The name of the statistic to decrement.
-     * @param int      $by The amount to decrement the statistic by.
-     * @return boolean True if successful, false if not.
+     * @param string $stat The name of the statistic to decrement.
+     * @param int $by The amount to decrement the statistic by.
+     * @return bool True if successful, false if not.
      */
-    public static function decr($stat = self::KEYNAME, $by = 1)
-    {
+    public static function decr(
+        string $stat = self::KEYNAME,
+        int $by = 1
+    ) : bool {
         return parent::decr($stat, $by);
     }
 
     /**
      * Delete a statistic with the given name.
      *
-     * @param string   $stat The name of the statistic to delete.
-     * @return boolean True if successful, false if not.
+     * @param string $stat The name of the statistic to delete.
+     * @return bool True if successful, false if not.
      */
-    public static function clear($stat = self::KEYNAME)
+    public static function clear(string $stat = self::KEYNAME) : bool
     {
         return parent::clear($stat);
     }

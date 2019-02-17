@@ -5,6 +5,7 @@ namespace Resque\Scheduler;
 use \DateTime;
 use \Resque\Event;
 use \Resque\Scheduler;
+use \Resque\Worker as ResqueWorker;
 
 /**
  * ResqueScheduler worker to handle scheduling of delayed tasks.
@@ -15,7 +16,7 @@ use \Resque\Scheduler;
  * @copyright (c) 2012 Chris Boulton
  * @license   http://www.opensource.org/licenses/mit-license.php
  */
-class Worker extends \Resque\Worker
+class Worker extends ResqueWorker
 {
     /**
      * @var int Interval to sleep for between checking schedules.
@@ -30,7 +31,7 @@ class Worker extends \Resque\Worker
     *
     * @param int $interval How often to check schedules.
     */
-    public function work($interval = null)
+    public function work(int $interval = null)
     {
         if ($interval !== null) {
             $this->interval = $interval;
@@ -61,7 +62,7 @@ class Worker extends \Resque\Worker
      */
     public function handleDelayedItems($timestamp = null)
     {
-        while (($timestamp = Scheduler::nextDelayedTimestamp($timestamp)) !== false) {
+        while ($timestamp = Scheduler::nextDelayedTimestamp($timestamp)) {
             $this->updateProcLine('Processing Delayed Items');
             $this->enqueueDelayedItemsForTimestamp($timestamp);
         }
@@ -78,34 +79,32 @@ class Worker extends \Resque\Worker
     public function enqueueDelayedItemsForTimestamp($timestamp)
     {
         $item = null;
+
         while ($item = Scheduler::nextItemForTimestamp($timestamp)) {
-            $this->log(
-                array(
+            $this->log([
                 'message' => 'Moving scheduled job ' . strtoupper($item['class']) . ' to ' . strtoupper($item['queue']),
-                'data' => array(
+                'data' => [
                     'type' => 'movescheduled',
-                    'args' => array(
-                        'timestamp' => (int)$timestamp,
+                    'args' => [
+                        'timestamp' => $timestamp,
                         'class' => $item['class'],
                         'queue' => $item['queue'],
                         'job_id' => $item['args'][0]['id'],
                         'wait' => round(microtime(true) - (isset($item['s_time']) ? $item['s_time'] : 0), 3),
                         's_wait' => $timestamp - floor(isset($item['s_time']) ? $item['s_time'] : 0)
-                        )
-                    )
-                ),
-                self::LOG_TYPE_INFO
-            );
-            Event::trigger(
-                'beforeDelayedEnqueue',
-                array(
-                    'queue' => $item['queue'],
-                    'class' => $item['class'],
-                    'args'  => $item['args'],
-                )
-            );
+                    ]
+                ]
+            ], self::LOG_TYPE_INFO);
 
-            $payload = array_merge(array($item['queue'], $item['class']), $item['args'], array($item['track']));
+            Event::trigger('beforeDelayedEnqueue', [
+                'queue' => $item['queue'],
+                'class' => $item['class'],
+                'args'  => $item['args'],
+            ]);
+
+            $payload = array_merge([$item['queue'], $item['class']],
+                $item['args'], [$item['track']]);
+
             call_user_func_array('\\Resque\\Resque::enqueue', $payload);
         }
     }
@@ -115,13 +114,14 @@ class Worker extends \Resque\Worker
      */
     protected function sleep()
     {
-        $this->log(
-            array(
-                'message' => 'Sleeping for ' . $this->interval,
-                'data' => array('type' => 'sleep', 'second' => $this->interval)
-            ),
-            self::LOG_TYPE_DEBUG
-        );
+        $this->log([
+            'message' => 'Sleeping for ' . $this->interval,
+            'data' => [
+                'type' => 'sleep',
+                'second' => $this->interval
+            ]
+        ], self::LOG_TYPE_DEBUG);
+
         sleep($this->interval);
     }
 
@@ -134,8 +134,9 @@ class Worker extends \Resque\Worker
      *
      * @param string $status The updated process title.
      */
-    protected function updateProcLine($status)
+    protected function updateProcLine(string $status)
     {
-        cli_set_process_title('resque-scheduler-' . Scheduler::VERSION . ': ' . $status);
+        cli_set_process_title('resque-scheduler-' . Scheduler::VERSION
+            . ': ' . $status);
     }
 }

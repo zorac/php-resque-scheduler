@@ -2,6 +2,8 @@
 
 namespace Resque\Scheduler\Job;
 
+use \Resque\Job\Status as ResqueJobStatus;
+
 /**
  * Status tracker/information for a job.
  *
@@ -11,7 +13,7 @@ namespace Resque\Scheduler\Job;
  * @copyright  Copyright 2013, Wan Qi Chen <kami@kamisama.me>
  * @license    MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-class Status extends \Resque\Job\Status
+class Status extends ResqueJobStatus
 {
     const STATUS_SCHEDULED = 63;
 }
