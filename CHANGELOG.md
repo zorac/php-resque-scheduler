@@ -1,5 +1,14 @@
 ##Changelog
 
+###**v2.0.1** [2019-02-19]
+
+* Cleanup and fixes from static analysis checks
+
+###**v2.0.0** [2019-01-31]
+
+* Migrate to fully-namespaced classes
+* Assorted cleanup and fixes
+
 ###**v1.2.3** [2015-03-28]
 
 * [fix] Fix#4: Undefined index `s_time`

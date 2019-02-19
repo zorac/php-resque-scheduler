@@ -18,7 +18,8 @@ class Stat extends ResqueStat
     const KEYNAME = 'schdlr';
 
     /**
-     * Get the value of the supplied statistic counter for the specified statistic.
+     * Get the value of the supplied statistic counter for the specified
+     * statistic.
      *
      * @param string $stat The name of the statistic to get the stats for.
      * @return int Value of the statistic.
@@ -29,7 +30,8 @@ class Stat extends ResqueStat
     }
 
     /**
-     * Increment the value of the specified statistic by a certain amount (default is 1)
+     * Increment the value of the specified statistic by a certain amount
+     * (default is 1)
      *
      * @param string $stat The name of the statistic to increment.
      * @param int $by The amount to increment the statistic by.
@@ -43,7 +45,8 @@ class Stat extends ResqueStat
     }
 
     /**
-     * Decrement the value of the specified statistic by a certain amount (default is 1)
+     * Decrement the value of the specified statistic by a certain amount
+     * (default is 1)
      *
      * @param string $stat The name of the statistic to decrement.
      * @param int $by The amount to decrement the statistic by.

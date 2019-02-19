@@ -24,13 +24,13 @@ class Worker extends ResqueWorker
     protected $interval = 5;
 
     /**
-    * The primary loop for a worker.
-    *
-    * Every $interval (seconds), the scheduled queue will be checked for jobs
-    * that should be pushed to Resque.
-    *
-    * @param int $interval How often to check schedules.
-    */
+     * The primary loop for a worker.
+     *
+     * Every $interval (seconds), the scheduled queue will be checked for jobs
+     * that should be pushed to Resque.
+     *
+     * @param int $interval How often to check schedules.
+     */
     public function work(int $interval = null)
     {
         if ($interval !== null) {
@@ -58,7 +58,8 @@ class Worker extends ResqueWorker
      * Searches for any items that are due to be scheduled in Resque
      * and adds them to the appropriate job queue in Resque.
      *
-     * @param DateTime|int $timestamp Search for any items up to this timestamp to schedule.
+     * @param DateTime|int $timestamp Search for any items up to this timestamp
+     *      to schedule.
      */
     public function handleDelayedItems($timestamp = null)
     {
@@ -74,7 +75,8 @@ class Worker extends ResqueWorker
      * Searches for all items for a given timestamp, pulls them off the list of
      * delayed jobs and pushes them across to Resque.
      *
-     * @param DateTime|int $timestamp Search for any items up to this timestamp to schedule.
+     * @param DateTime|int $timestamp Search for any items up to this timestamp
+     *      to schedule.
      */
     public function enqueueDelayedItemsForTimestamp($timestamp)
     {
@@ -127,10 +129,6 @@ class Worker extends ResqueWorker
 
     /**
      * Update the status of the current worker process.
-     *
-     * On supported systems (with the PECL proctitle module installed), update
-     * the name of the currently running process to indicate the current state
-     * of a worker.
      *
      * @param string $status The updated process title.
      */

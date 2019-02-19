@@ -10,17 +10,17 @@ use \Resque\Scheduler\InvalidTimestampException;
 use \Resque\Scheduler\Job\Status;
 
 /**
-* ResqueScheduler core class to handle scheduling of jobs in the future.
-*
-* @package   ResqueScheduler
-* @author    Chris Boulton <chris@bigcommerce.com> (Original)
-* @author    Wan Qi Chen <kami@kamisama.me>
-* @copyright (c) 2012 Chris Boulton
-* @license   http://www.opensource.org/licenses/mit-license.php
-*/
+ * ResqueScheduler core class to handle scheduling of jobs in the future.
+ *
+ * @package   ResqueScheduler
+ * @author    Chris Boulton <chris@bigcommerce.com> (Original)
+ * @author    Wan Qi Chen <kami@kamisama.me>
+ * @copyright (c) 2012 Chris Boulton
+ * @license   http://www.opensource.org/licenses/mit-license.php
+ */
 class Scheduler
 {
-    const VERSION = "2.0.0";
+    const VERSION = "2.0.1";
 
     // Name of the scheduler queue
     // Should be as unique as possible
@@ -148,7 +148,7 @@ class Scheduler
      * queue, class and arguments that you used when you added
      * to the delayed queue
      *
-     * also, this is an expensive operation because all delayed keys have tobe
+     * also, this is an expensive operation because all delayed keys have to be
      * searched
      *
      * @param string $queue A queue name.
@@ -313,7 +313,7 @@ class Scheduler
      * @param DateTime|int $timestamp Instance of DateTime or UNIX timestamp.
      * @return mixed[] Matching job at timestamp.
      */
-    public static function nextItemForTimestamp($timestamp) : array
+    public static function nextItemForTimestamp($timestamp) : ?array
     {
         $timestamp = self::getTimestamp($timestamp);
         $key = self::QUEUE_NAME . ':' . $timestamp;
@@ -330,7 +330,7 @@ class Scheduler
      *
      * @param string $class Name of job class.
      * @param string $queue Name of queue.
-     * @return bool True.
+     * @return bool True if the job and class are valid.
      * @throws ResqueException
      */
     private static function validateJob(string $class, string $queue) : bool

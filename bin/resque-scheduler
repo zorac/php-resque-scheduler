@@ -2,12 +2,12 @@
 <?php
 
 // Find and initialize Composer
-$files = array(
+$files = [
     __DIR__ . '/../../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php',
     __DIR__ . '/../../../../autoload.php',
     __DIR__ . '/../vendor/autoload.php',
-);
+];
 
 $found = false;
 foreach ($files as $file) {
@@ -20,8 +20,8 @@ foreach ($files as $file) {
 if (!class_exists('Composer\Autoload\ClassLoader', false)) {
     die(
         'You need to set up the project dependencies using the following commands:' . PHP_EOL .
-            'curl -s https://getcomposer.org/installer | php' . PHP_EOL .
-            'php composer.phar install' . PHP_EOL
+        'curl -s https://getcomposer.org/installer | php' . PHP_EOL .
+        'php composer.phar install' . PHP_EOL
     );
 }
 
@@ -35,7 +35,8 @@ $LOG_HANDLER_TARGET = getenv('LOGHANDLERTARGET');
 $logger = new MonologInit\MonologInit($LOG_HANDLER, $LOG_HANDLER_TARGET);
 
 if (!empty($REDIS_BACKEND)) {
-    Resque\Resque::setBackend($REDIS_BACKEND, $REDIS_DATABASE, $REDIS_NAMESPACE);
+    Resque\Resque::setBackend($REDIS_BACKEND, (int)$REDIS_DATABASE,
+        $REDIS_NAMESPACE);
 }
 
 // Set log level for resque-scheduler
@@ -53,7 +54,7 @@ if (!empty($VVERBOSE)) {
 $APP_INCLUDE = getenv('APP_INCLUDE');
 if ($APP_INCLUDE) {
     if (!file_exists($APP_INCLUDE)) {
-        die('APP_INCLUDE ('.$APP_INCLUDE.") does not exist.\n");
+        die('APP_INCLUDE (' . $APP_INCLUDE . ") does not exist.\n");
     }
 
     require_once $APP_INCLUDE;
@@ -72,11 +73,19 @@ $worker->registerLogger($logger);
 
 $PIDFILE = getenv('PIDFILE');
 if ($PIDFILE) {
-    file_put_contents($PIDFILE, getmypid()) or
+    if (!file_put_contents($PIDFILE, getmypid())) {
         die('Could not write PID information to ' . $PIDFILE);
+    }
 }
 
-logStart($logger, array('message' => '*** Starting scheduler worker ' . $worker, 'data' => array('type' => 'start', 'worker' => (string) $worker)), $logLevel);
+logStart($logger, [
+    'message' => '*** Starting scheduler worker ' . $worker,
+    'data' => [
+        'type' => 'start',
+        'worker' => (string) $worker,
+    ],
+], $logLevel);
+
 $worker->work($interval);
 
 function logStart($logger, $message, $logLevel)
