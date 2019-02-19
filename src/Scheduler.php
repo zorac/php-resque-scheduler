@@ -20,7 +20,7 @@ use \Resque\Scheduler\Job\Status;
  */
 class Scheduler
 {
-    const VERSION = "2.0.1";
+    const VERSION = "2.0.2";
 
     // Name of the scheduler queue
     // Should be as unique as possible

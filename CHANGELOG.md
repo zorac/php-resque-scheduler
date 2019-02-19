@@ -1,5 +1,9 @@
 ##Changelog
 
+###**v2.0.2** [2019-02-19]
+
+* Fix only one timestamp being handled per sleep
+
 ###**v2.0.1** [2019-02-19]
 
 * Cleanup and fixes from static analysis checks

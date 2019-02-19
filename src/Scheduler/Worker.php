@@ -57,13 +57,10 @@ class Worker extends ResqueWorker
      *
      * Searches for any items that are due to be scheduled in Resque
      * and adds them to the appropriate job queue in Resque.
-     *
-     * @param DateTime|int $timestamp Search for any items up to this timestamp
-     *      to schedule.
      */
-    public function handleDelayedItems($timestamp = null)
+    public function handleDelayedItems()
     {
-        while ($timestamp = Scheduler::nextDelayedTimestamp($timestamp)) {
+        while ($timestamp = Scheduler::nextDelayedTimestamp()) {
             $this->updateProcLine('Processing Delayed Items');
             $this->enqueueDelayedItemsForTimestamp($timestamp);
         }
