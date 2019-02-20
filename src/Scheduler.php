@@ -20,7 +20,7 @@ use \Resque\Scheduler\Job\Status;
  */
 class Scheduler
 {
-    const VERSION = "2.0.2";
+    const VERSION = "2.0.3";
 
     // Name of the scheduler queue
     // Should be as unique as possible
@@ -108,7 +108,7 @@ class Scheduler
      */
     public static function delayedPush($timestamp, array $item)
     {
-        $json = json_encode($item);
+        $json = json_encode($item, Resque::JSON_ENCODE_OPTIONS);
 
         if ($json !== false) { // TODO or throw?
             $timestamp = self::getTimestamp($timestamp);
@@ -161,7 +161,8 @@ class Scheduler
         string $class,
         array $args
     ) : int {
-        $json = json_encode(self::jobToHash($queue, $class, $args));
+        $job = self::jobToHash($queue, $class, $args);
+        $json = json_encode($job, Resque::JSON_ENCODE_OPTIONS);
         $destroyed = 0;
 
         if ($json !== false) { // TODO or throw?
@@ -195,7 +196,8 @@ class Scheduler
         string $class,
         array $args
     ) : int {
-        $json = json_encode(self::jobToHash($queue, $class, $args));
+        $job = self::jobToHash($queue, $class, $args);
+        $json = json_encode($job, Resque::JSON_ENCODE_OPTIONS);
 
         if ($json === false) {
             return 0;
@@ -317,12 +319,20 @@ class Scheduler
     {
         $timestamp = self::getTimestamp($timestamp);
         $key = self::QUEUE_NAME . ':' . $timestamp;
-
-        $item = json_decode(Resque::redis()->lpop($key), true);
+        $json = Resque::redis()->lpop($key);
 
         self::cleanupTimestamp($key, $timestamp);
 
-        return $item;
+        if (!empty($json)) {
+            $item = json_decode($json, true, Resque::JSON_DECODE_DEPTH,
+                Resque::JSON_DECODE_OPTIONS);
+
+            if (!empty($item)) {
+                return $item;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -1,5 +1,9 @@
 ##Changelog
 
+###**v2.0.3** [2019-02-20]
+
+* JSON handling improvements
+
 ###**v2.0.2** [2019-02-19]
 
 * Fix only one timestamp being handled per sleep

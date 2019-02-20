@@ -37,7 +37,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "zorac/php-resque": "^2.0.1"
+        "zorac/php-resque": "^2.1.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.11.2",
