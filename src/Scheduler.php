@@ -20,7 +20,7 @@ use \Resque\Scheduler\Job\Status;
  */
 class Scheduler
 {
-    const VERSION = "2.0.3";
+    const VERSION = "2.1.0";
 
     // Name of the scheduler queue
     // Should be as unique as possible
@@ -95,6 +95,7 @@ class Scheduler
             'queue' => $queue,
             'class' => $class,
             'args'  => $args,
+            'id'    => $args['id'],
         ]);
 
         return $args['id'];

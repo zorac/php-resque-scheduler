@@ -4,6 +4,7 @@ namespace Resque\Scheduler;
 
 use \DateTime;
 use \Resque\Event;
+use \Resque\Resque;
 use \Resque\Scheduler;
 use \Resque\Worker as ResqueWorker;
 
@@ -98,13 +99,12 @@ class Worker extends ResqueWorker
             Event::trigger('beforeDelayedEnqueue', [
                 'queue' => $item['queue'],
                 'class' => $item['class'],
-                'args'  => $item['args'],
+                'args'  => $item['args'][0],
+                'id'    => $item['args'][0]['id'],
             ]);
 
-            $payload = array_merge([$item['queue'], $item['class']],
-                $item['args'], [$item['track']]);
-
-            call_user_func_array('\\Resque\\Resque::enqueue', $payload);
+            Resque::enqueue($item['queue'], $item['class'], $item['args'][0],
+                $item['track']);
         }
     }
 

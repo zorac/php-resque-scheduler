@@ -1,5 +1,9 @@
 ##Changelog
 
+###**v2.1.0** [2019-03-11]
+
+* Add job ID to callback events
+
 ###**v2.0.3** [2019-02-20]
 
 * JSON handling improvements
