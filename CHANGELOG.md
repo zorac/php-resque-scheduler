@@ -1,5 +1,9 @@
 ##Changelog
 
+###**v2.1.1** [2019-04-09]
+
+* Logging tweak and dependency bumps
+
 ###**v2.1.0** [2019-03-11]
 
 * Add job ID to callback events
@@ -38,7 +42,6 @@
 
 * [new] Add actual waiting time passed in scheduled queue in MoveScheduledJob log
 * [new] Add expected waiting time in scheduled queue in MoveSheduledJob log
-
 
 ###**v1.0.2** [2013-02-01]
 

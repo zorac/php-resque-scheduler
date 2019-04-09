@@ -7,8 +7,6 @@ use \Resque\Stat as ResqueStat;
 /**
  * Resque statistic management (jobs processed, failed, etc)
  *
- * @package    ResqueScheduler
- * @subpackage ResqueScheduler.Stat
  * @author     Chris Boulton <chris@bigcommerce.com> (Original)
  * @author     Wan Qi Chen <kami@kamisama.me>
  * @license    http://www.opensource.org/licenses/mit-license.php

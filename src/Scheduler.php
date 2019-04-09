@@ -12,7 +12,6 @@ use \Resque\Scheduler\Job\Status;
 /**
  * ResqueScheduler core class to handle scheduling of jobs in the future.
  *
- * @package   ResqueScheduler
  * @author    Chris Boulton <chris@bigcommerce.com> (Original)
  * @author    Wan Qi Chen <kami@kamisama.me>
  * @copyright (c) 2012 Chris Boulton

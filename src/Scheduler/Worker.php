@@ -11,7 +11,6 @@ use \Resque\Worker as ResqueWorker;
 /**
  * ResqueScheduler worker to handle scheduling of delayed tasks.
  *
- * @package   ResqueScheduler
  * @author    Chris Boulton <chris@bigcommerce.com> (Original)
  * @author    Wan Qi Chen <kami@kamisama.me>
  * @copyright (c) 2012 Chris Boulton
@@ -82,7 +81,7 @@ class Worker extends ResqueWorker
 
         while ($item = Scheduler::nextItemForTimestamp($timestamp)) {
             $this->log([
-                'message' => 'Moving scheduled job ' . strtoupper($item['class']) . ' to ' . strtoupper($item['queue']),
+                'message' => 'Moving scheduled job ' . $item['class'] . ' to ' . $item['queue'],
                 'data' => [
                     'type' => 'movescheduled',
                     'args' => [
