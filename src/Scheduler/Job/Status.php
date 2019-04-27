@@ -2,7 +2,7 @@
 
 namespace Resque\Scheduler\Job;
 
-use \Resque\Job\Status as ResqueJobStatus;
+use Resque\Job\Status as ResqueJobStatus;
 
 /**
  * Status tracker/information for a job.

@@ -2,11 +2,11 @@
 
 namespace Resque\Scheduler;
 
-use \DateTime;
-use \Resque\Event;
-use \Resque\Resque;
-use \Resque\Scheduler;
-use \Resque\Worker as ResqueWorker;
+use DateTime;
+use Resque\Event;
+use Resque\Resque;
+use Resque\Scheduler;
+use Resque\Worker as ResqueWorker;
 
 /**
  * ResqueScheduler worker to handle scheduling of delayed tasks.

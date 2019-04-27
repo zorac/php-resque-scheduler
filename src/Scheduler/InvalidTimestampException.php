@@ -2,7 +2,7 @@
 
 namespace Resque\Scheduler;
 
-use \Resque\ResqueException;
+use Resque\ResqueException;
 
 /**
 * Exception thrown whenever an invalid timestamp has been passed to a job.

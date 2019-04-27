@@ -2,12 +2,12 @@
 
 namespace Resque;
 
-use \DateTime;
-use \Resque\Event;
-use \Resque\Resque;
-use \Resque\ResqueException;
-use \Resque\Scheduler\InvalidTimestampException;
-use \Resque\Scheduler\Job\Status;
+use DateTime;
+use Resque\Event;
+use Resque\Resque;
+use Resque\ResqueException;
+use Resque\Scheduler\InvalidTimestampException;
+use Resque\Scheduler\Job\Status;
 
 /**
  * ResqueScheduler core class to handle scheduling of jobs in the future.

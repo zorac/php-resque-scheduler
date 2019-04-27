@@ -2,7 +2,7 @@
 
 namespace Resque\Scheduler;
 
-use \Resque\Stat as ResqueStat;
+use Resque\Stat as ResqueStat;
 
 /**
  * Resque statistic management (jobs processed, failed, etc)
