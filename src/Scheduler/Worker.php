@@ -31,7 +31,7 @@ class Worker extends ResqueWorker
      *
      * @param int $interval How often to check schedules.
      */
-    public function work(int $interval = null)
+    public function work(int $interval = null) : void
     {
         if ($interval !== null) {
             $this->interval = $interval;
@@ -58,7 +58,7 @@ class Worker extends ResqueWorker
      * Searches for any items that are due to be scheduled in Resque
      * and adds them to the appropriate job queue in Resque.
      */
-    public function handleDelayedItems()
+    public function handleDelayedItems() : void
     {
         while ($timestamp = Scheduler::nextDelayedTimestamp()) {
             $this->updateProcLine('Processing Delayed Items');
@@ -75,7 +75,7 @@ class Worker extends ResqueWorker
      * @param DateTime|int $timestamp Search for any items up to this timestamp
      *      to schedule.
      */
-    public function enqueueDelayedItemsForTimestamp($timestamp)
+    public function enqueueDelayedItemsForTimestamp($timestamp) : void
     {
         $item = null;
 
@@ -102,15 +102,19 @@ class Worker extends ResqueWorker
                 'id'    => $item['args'][0]['id'],
             ]);
 
-            Resque::enqueue($item['queue'], $item['class'], $item['args'][0],
-                $item['track']);
+            Resque::enqueue(
+                $item['queue'],
+                $item['class'],
+                $item['args'][0],
+                $item['track']
+            );
         }
     }
 
     /**
      * Sleep for the defined interval.
      */
-    protected function sleep()
+    protected function sleep() : void
     {
         $this->log([
             'message' => 'Sleeping for ' . $this->interval,
@@ -128,9 +132,11 @@ class Worker extends ResqueWorker
      *
      * @param string $status The updated process title.
      */
-    protected function updateProcLine(string $status)
+    protected function updateProcLine(string $status) : void
     {
-        cli_set_process_title('resque-scheduler-' . Scheduler::VERSION
-            . ': ' . $status);
+        if (PHP_OS != 'Darwin') { // Not suppotted on macOS
+            cli_set_process_title('resque-scheduler-' . Scheduler::VERSION
+                . ': ' . $status);
+        }
     }
 }

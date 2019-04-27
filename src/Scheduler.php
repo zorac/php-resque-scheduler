@@ -19,7 +19,7 @@ use Resque\Scheduler\Job\Status;
  */
 class Scheduler
 {
-    const VERSION = "2.1.0";
+    const VERSION = "2.2.0";
 
     // Name of the scheduler queue
     // Should be as unique as possible
@@ -49,8 +49,13 @@ class Scheduler
         array $args = [],
         bool $trackStatus = false
     ) : string {
-        return self::enqueueAt(time() + $in, $queue, $class, $args,
-            $trackStatus);
+        return self::enqueueAt(
+            time() + $in,
+            $queue,
+            $class,
+            $args,
+            $trackStatus
+        );
     }
 
     /**
@@ -106,7 +111,7 @@ class Scheduler
      * @param DateTime|int $timestamp Timestamp job is scheduled to be run at.
      * @param mixed[] $item Hash of item to be pushed to schedule.
      */
-    public static function delayedPush($timestamp, array $item)
+    public static function delayedPush($timestamp, array $item) : void
     {
         $json = json_encode($item, Resque::JSON_ENCODE_OPTIONS);
 
@@ -134,7 +139,7 @@ class Scheduler
      * @param DateTime|int $timestamp Timestamp
      * @return int Number of scheduled jobs.
      */
-    public static function getDelayedTimestampSize($timestamp)
+    public static function getDelayedTimestampSize($timestamp) : int
     {
         $timestamp = self::getTimestamp($timestamp);
 
@@ -169,7 +174,7 @@ class Scheduler
             $redis = Resque::redis();
 
             foreach ($redis->keys(self::QUEUE_NAME . ':*') as $key) {
-                $key = $redis->removePrefix($key);
+                $key = Redis::removePrefix($key);
                 $destroyed += $redis->lrem($key, 0, $json);
             }
         }
@@ -245,7 +250,7 @@ class Scheduler
      * @param string $key Key to count number of items at.
      * @param DateTime|int $timestamp Matching timestamp for $key.
      */
-    private static function cleanupTimestamp($key, $timestamp)
+    private static function cleanupTimestamp($key, $timestamp) : void
     {
         $timestamp = self::getTimestamp($timestamp);
         $redis = Resque::redis();
@@ -263,19 +268,13 @@ class Scheduler
      * @return int UNIX timestamp
      * @throws InvalidTimestampException
      */
-    private static function getTimestamp($timestamp)
+    private static function getTimestamp($timestamp) : int
     {
         if ($timestamp instanceof DateTime) {
             $timestamp = $timestamp->getTimestamp();
         }
 
-        if ((int)$timestamp != $timestamp) {
-            throw new InvalidTimestampException(
-                'The supplied timestamp value could not be converted to an integer.'
-            );
-        }
-
-        return (int)$timestamp;
+        return $timestamp;
     }
 
     /**
@@ -299,10 +298,14 @@ class Scheduler
             $at = self::getTimestamp($at);
         }
 
-        $items = Resque::redis()->zrangebyscore(self::QUEUE_NAME, '-inf', $at,
-            ['limit', 0, 1]);
+        $items = Resque::redis()->zrangebyscore(
+            self::QUEUE_NAME,
+            '-inf',
+            $at,
+            ['limit', 0, 1]
+        );
 
-        if (!empty($items)) {
+        if (count($items) > 0) {
             return (int)$items[0];
         }
 
@@ -323,11 +326,15 @@ class Scheduler
 
         self::cleanupTimestamp($key, $timestamp);
 
-        if (!empty($json)) {
-            $item = json_decode($json, true, Resque::JSON_DECODE_DEPTH,
-                Resque::JSON_DECODE_OPTIONS);
+        if (isset($json)) {
+            $item = json_decode(
+                $json,
+                true,
+                Resque::JSON_DECODE_DEPTH,
+                Resque::JSON_DECODE_OPTIONS
+            );
 
-            if (!empty($item)) {
+            if (isset($item)) {
                 return $item;
             }
         }
@@ -345,9 +352,9 @@ class Scheduler
      */
     private static function validateJob(string $class, string $queue) : bool
     {
-        if (empty($class)) {
+        if ($class === '') {
             throw new ResqueException('Jobs must be given a class.');
-        } elseif (empty($queue)) {
+        } elseif ($queue === '') {
             throw new ResqueException('Jobs must be put in a queue.');
         }
 

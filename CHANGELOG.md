@@ -1,5 +1,11 @@
 ##Changelog
 
+###**v2.2.0** [2019-04-27]
+
+* **PHP 7.1 or later is now required.**
+* Added PHP CodeSniffer and additional PHPStan rules
+* Lots of code cleanup
+
 ###**v2.1.1** [2019-04-09]
 
 * Logging tweak and dependency bumps
