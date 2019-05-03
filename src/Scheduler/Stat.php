@@ -7,9 +7,9 @@ use Resque\Stat as ResqueStat;
 /**
  * Resque statistic management (jobs processed, failed, etc)
  *
- * @author     Chris Boulton <chris@bigcommerce.com> (Original)
+ * @author     Chris Boulton <chris@bigcommerce.com>
  * @author     Wan Qi Chen <kami@kamisama.me>
- * @license    http://www.opensource.org/licenses/mit-license.php
+ * @license    http://www.opensource.org/licenses/mit-license.php MIT
  */
 class Stat extends ResqueStat
 {

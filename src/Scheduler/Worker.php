@@ -11,10 +11,10 @@ use Resque\Worker as ResqueWorker;
 /**
  * ResqueScheduler worker to handle scheduling of delayed tasks.
  *
- * @author    Chris Boulton <chris@bigcommerce.com> (Original)
+ * @author    Chris Boulton <chris@bigcommerce.com>
  * @author    Wan Qi Chen <kami@kamisama.me>
- * @copyright (c) 2012 Chris Boulton
- * @license   http://www.opensource.org/licenses/mit-license.php
+ * @copyright 2012 Chris Boulton
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
  */
 class Worker extends ResqueWorker
 {
@@ -30,6 +30,7 @@ class Worker extends ResqueWorker
      * that should be pushed to Resque.
      *
      * @param int $interval How often to check schedules.
+     * @return void
      */
     public function work(int $interval = null) : void
     {
@@ -57,6 +58,8 @@ class Worker extends ResqueWorker
      *
      * Searches for any items that are due to be scheduled in Resque
      * and adds them to the appropriate job queue in Resque.
+     *
+     * @return void
      */
     public function handleDelayedItems() : void
     {
@@ -74,6 +77,7 @@ class Worker extends ResqueWorker
      *
      * @param DateTime|int $timestamp Search for any items up to this timestamp
      *      to schedule.
+     * @return void
      */
     public function enqueueDelayedItemsForTimestamp($timestamp) : void
     {
@@ -113,6 +117,8 @@ class Worker extends ResqueWorker
 
     /**
      * Sleep for the defined interval.
+     *
+     * @return void
      */
     protected function sleep() : void
     {
@@ -131,6 +137,7 @@ class Worker extends ResqueWorker
      * Update the status of the current worker process.
      *
      * @param string $status The updated process title.
+     * @return void
      */
     protected function updateProcLine(string $status) : void
     {

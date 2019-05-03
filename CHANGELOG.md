@@ -1,5 +1,9 @@
 ##Changelog
 
+###**v2.2.1** [2019-05-03]
+
+* Update in line with upstream changes
+
 ###**v2.2.0** [2019-04-27]
 
 * **PHP 7.1 or later is now required.**

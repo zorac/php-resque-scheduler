@@ -8,18 +8,19 @@ use Resque\Resque;
 use Resque\ResqueException;
 use Resque\Scheduler\InvalidTimestampException;
 use Resque\Scheduler\Job\Status;
+use Resque\Util;
 
 /**
  * ResqueScheduler core class to handle scheduling of jobs in the future.
  *
- * @author    Chris Boulton <chris@bigcommerce.com> (Original)
+ * @author    Chris Boulton <chris@bigcommerce.com>
  * @author    Wan Qi Chen <kami@kamisama.me>
- * @copyright (c) 2012 Chris Boulton
- * @license   http://www.opensource.org/licenses/mit-license.php
+ * @copyright 2012 Chris Boulton
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
  */
 class Scheduler
 {
-    const VERSION = "2.2.0";
+    const VERSION = "2.2.1";
 
     // Name of the scheduler queue
     // Should be as unique as possible
@@ -110,10 +111,11 @@ class Scheduler
      *
      * @param DateTime|int $timestamp Timestamp job is scheduled to be run at.
      * @param mixed[] $item Hash of item to be pushed to schedule.
+     * @return void
      */
     public static function delayedPush($timestamp, array $item) : void
     {
-        $json = json_encode($item, Resque::JSON_ENCODE_OPTIONS);
+        $json = Util::jsonEncode($item);
 
         if ($json !== false) { // TODO or throw?
             $timestamp = self::getTimestamp($timestamp);
@@ -149,7 +151,7 @@ class Scheduler
     /**
      * Remove a delayed job from the queue.
      *
-     * note: you must specify exactly the same
+     * Note: you must specify exactly the same
      * queue, class and arguments that you used when you added
      * to the delayed queue
      *
@@ -167,7 +169,7 @@ class Scheduler
         array $args
     ) : int {
         $job = self::jobToHash($queue, $class, $args);
-        $json = json_encode($job, Resque::JSON_ENCODE_OPTIONS);
+        $json = Util::jsonEncode($job);
         $destroyed = 0;
 
         if ($json !== false) { // TODO or throw?
@@ -183,9 +185,9 @@ class Scheduler
     }
 
     /**
-     * removed a delayed job queued for a specific timestamp
+     * Removed a delayed job queued for a specific timestamp
      *
-     * note: you must specify exactly the same
+     * Note: you must specify exactly the same
      * queue, class and arguments that you used when you added
      * to the delayed queue
      *
@@ -202,7 +204,7 @@ class Scheduler
         array $args
     ) : int {
         $job = self::jobToHash($queue, $class, $args);
-        $json = json_encode($job, Resque::JSON_ENCODE_OPTIONS);
+        $json = Util::jsonEncode($job);
 
         if ($json === false) {
             return 0;
@@ -226,7 +228,6 @@ class Scheduler
      * @param bool $trackStatus Whether to track the job status.
      * @return mixed[] The job properties.
      */
-
     private static function jobToHash(
         string $queue,
         string $class,
@@ -249,6 +250,7 @@ class Scheduler
      *
      * @param string $key Key to count number of items at.
      * @param DateTime|int $timestamp Matching timestamp for $key.
+     * @return void
      */
     private static function cleanupTimestamp($key, $timestamp) : void
     {
@@ -327,12 +329,7 @@ class Scheduler
         self::cleanupTimestamp($key, $timestamp);
 
         if (isset($json)) {
-            $item = json_decode(
-                $json,
-                true,
-                Resque::JSON_DECODE_DEPTH,
-                Resque::JSON_DECODE_OPTIONS
-            );
+            $item = Util::jsonDecode($json);
 
             if (isset($item)) {
                 return $item;

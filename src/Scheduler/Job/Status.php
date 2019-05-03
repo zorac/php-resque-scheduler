@@ -8,8 +8,8 @@ use Resque\Job\Status as ResqueJobStatus;
  * Status tracker/information for a job.
  *
  * @author     Wan Qi Chen <kami@kamisama.me>
- * @copyright  Copyright 2013, Wan Qi Chen <kami@kamisama.me>
- * @license    MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @copyright  2013 Wan Qi Chen
+ * @license    http://www.opensource.org/licenses/mit-license.php MIT
  */
 class Status extends ResqueJobStatus
 {
