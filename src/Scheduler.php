@@ -20,10 +20,19 @@ use Resque\Util;
  */
 class Scheduler
 {
-    const VERSION = "2.2.1";
+    /**
+     * @var string Current version of php-scheduler.
+     */
+    const VERSION = "2.2.2";
 
-    // Name of the scheduler queue
-    // Should be as unique as possible
+    /**
+     * @var int Default interval (in seconds) for workers to check for jobs.
+     */
+    const DEFAULT_INTERVAL = Resque::DEFAULT_INTERVAL;
+
+    /**
+     * @var string Name of the scheduler queue. Should be as unique as possible.
+     */
     const QUEUE_NAME = '_schdlr_';
 
     /**

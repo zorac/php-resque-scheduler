@@ -21,7 +21,13 @@ class Worker extends ResqueWorker
     /**
      * @var int Interval to sleep for between checking schedules.
      */
-    protected $interval = 5;
+    protected $interval;
+
+    /**
+     * @var bool Whether blocking operation was requested. Not currently
+     *      supported by the way we use Redis.
+     */
+    protected $blocking;
 
     /**
      * The primary loop for a worker.
@@ -30,13 +36,15 @@ class Worker extends ResqueWorker
      * that should be pushed to Resque.
      *
      * @param int $interval How often to check schedules.
+     * @param bool $blocking Ignored. Resque Scheduler cannot support blocking.
      * @return void
      */
-    public function work(int $interval = null) : void
-    {
-        if ($interval !== null) {
-            $this->interval = $interval;
-        }
+    public function work(
+        int $interval = Scheduler::DEFAULT_INTERVAL,
+        bool $blocking = false
+    ) : void {
+        $this->interval = $interval;
+        $this->blocking = $blocking;
 
         $this->updateProcLine('Starting');
         $this->startup();
