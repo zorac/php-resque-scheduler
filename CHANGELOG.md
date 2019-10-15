@@ -1,5 +1,13 @@
 ##Changelog
 
+###**v2.2.3** [2019-10-15]
+
+* Tweak composer file for php-resque
+
+###**v2.2.2** [2019-07-03]
+
+* Add support for blocking mode
+
 ###**v2.2.1** [2019-05-03]
 
 * Update in line with upstream changes

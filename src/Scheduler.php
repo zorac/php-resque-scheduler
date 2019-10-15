@@ -23,7 +23,7 @@ class Scheduler
     /**
      * @var string Current version of php-scheduler.
      */
-    const VERSION = "2.2.2";
+    const VERSION = "2.2.3";
 
     /**
      * @var int Default interval (in seconds) for workers to check for jobs.
