@@ -42,7 +42,7 @@ class Worker extends ResqueWorker
     public function work(
         int $interval = Scheduler::DEFAULT_INTERVAL,
         bool $blocking = false
-    ) : void {
+    ): void {
         $this->interval = $interval;
         $this->blocking = $blocking;
 
@@ -69,7 +69,7 @@ class Worker extends ResqueWorker
      *
      * @return void
      */
-    public function handleDelayedItems() : void
+    public function handleDelayedItems(): void
     {
         while ($timestamp = Scheduler::nextDelayedTimestamp()) {
             $this->updateProcLine('Processing Delayed Items');
@@ -87,7 +87,7 @@ class Worker extends ResqueWorker
      *      to schedule.
      * @return void
      */
-    public function enqueueDelayedItemsForTimestamp($timestamp) : void
+    public function enqueueDelayedItemsForTimestamp($timestamp): void
     {
         $item = null;
 
@@ -128,7 +128,7 @@ class Worker extends ResqueWorker
      *
      * @return void
      */
-    protected function sleep() : void
+    protected function sleep(): void
     {
         $this->log([
             'message' => 'Sleeping for ' . $this->interval,
@@ -147,7 +147,7 @@ class Worker extends ResqueWorker
      * @param string $status The updated process title.
      * @return void
      */
-    protected function updateProcLine(string $status) : void
+    protected function updateProcLine(string $status): void
     {
         if (PHP_OS != 'Darwin') { // Not suppotted on macOS
             cli_set_process_title('resque-scheduler-' . Scheduler::VERSION

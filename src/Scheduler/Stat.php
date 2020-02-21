@@ -13,7 +13,7 @@ use Resque\Stat as ResqueStat;
  */
 class Stat extends ResqueStat
 {
-    const KEYNAME = 'schdlr';
+    public const KEYNAME = 'schdlr';
 
     /**
      * Get the value of the supplied statistic counter for the specified
@@ -22,7 +22,7 @@ class Stat extends ResqueStat
      * @param string $stat The name of the statistic to get the stats for.
      * @return int Value of the statistic.
      */
-    public static function get(string $stat = self::KEYNAME) : int
+    public static function get(string $stat = self::KEYNAME): int
     {
         return parent::get($stat);
     }
@@ -38,7 +38,7 @@ class Stat extends ResqueStat
     public static function incr(
         string $stat = self::KEYNAME,
         int $by = 1
-    ) : bool {
+    ): bool {
         return parent::incr($stat, $by);
     }
 
@@ -53,7 +53,7 @@ class Stat extends ResqueStat
     public static function decr(
         string $stat = self::KEYNAME,
         int $by = 1
-    ) : bool {
+    ): bool {
         return parent::decr($stat, $by);
     }
 
@@ -63,7 +63,7 @@ class Stat extends ResqueStat
      * @param string $stat The name of the statistic to delete.
      * @return bool True if successful, false if not.
      */
-    public static function clear(string $stat = self::KEYNAME) : bool
+    public static function clear(string $stat = self::KEYNAME): bool
     {
         return parent::clear($stat);
     }

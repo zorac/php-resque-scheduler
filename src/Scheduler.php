@@ -23,17 +23,17 @@ class Scheduler
     /**
      * @var string Current version of php-scheduler.
      */
-    const VERSION = "2.2.3";
+    public const VERSION = "2.2.3";
 
     /**
      * @var int Default interval (in seconds) for workers to check for jobs.
      */
-    const DEFAULT_INTERVAL = Resque::DEFAULT_INTERVAL;
+    public const DEFAULT_INTERVAL = Resque::DEFAULT_INTERVAL;
 
     /**
      * @var string Name of the scheduler queue. Should be as unique as possible.
      */
-    const QUEUE_NAME = '_schdlr_';
+    public const QUEUE_NAME = '_schdlr_';
 
     /**
      * Enqueue a job in a given number of seconds from now.
@@ -58,7 +58,7 @@ class Scheduler
         string $class,
         array $args = [],
         bool $trackStatus = false
-    ) : string {
+    ): string {
         return self::enqueueAt(
             time() + $in,
             $queue,
@@ -92,7 +92,7 @@ class Scheduler
         string $class,
         array $args = [],
         bool $trackStatus = false
-    ) : string {
+    ): string {
         self::validateJob($class, $queue);
 
         $args['id'] = Resque::generateJobId();
@@ -122,7 +122,7 @@ class Scheduler
      * @param mixed[] $item Hash of item to be pushed to schedule.
      * @return void
      */
-    public static function delayedPush($timestamp, array $item) : void
+    public static function delayedPush($timestamp, array $item): void
     {
         $json = Util::jsonEncode($item);
 
@@ -139,7 +139,7 @@ class Scheduler
      *
      * @return int Number of scheduled jobs.
      */
-    public static function getDelayedQueueScheduleSize() : int
+    public static function getDelayedQueueScheduleSize(): int
     {
         return Resque::redis()->zcard(self::QUEUE_NAME);
     }
@@ -150,7 +150,7 @@ class Scheduler
      * @param DateTime|int $timestamp Timestamp
      * @return int Number of scheduled jobs.
      */
-    public static function getDelayedTimestampSize($timestamp) : int
+    public static function getDelayedTimestampSize($timestamp): int
     {
         $timestamp = self::getTimestamp($timestamp);
 
@@ -176,7 +176,7 @@ class Scheduler
         string $queue,
         string $class,
         array $args
-    ) : int {
+    ): int {
         $job = self::jobToHash($queue, $class, $args);
         $json = Util::jsonEncode($job);
         $destroyed = 0;
@@ -211,7 +211,7 @@ class Scheduler
         string $queue,
         string $class,
         array $args
-    ) : int {
+    ): int {
         $job = self::jobToHash($queue, $class, $args);
         $json = Util::jsonEncode($job);
 
@@ -242,7 +242,7 @@ class Scheduler
         string $class,
         array $args = [],
         bool $trackStatus = false
-    ) : array {
+    ): array {
         return [
             'class' => $class,
             'args'  => [$args],
@@ -261,7 +261,7 @@ class Scheduler
      * @param DateTime|int $timestamp Matching timestamp for $key.
      * @return void
      */
-    private static function cleanupTimestamp($key, $timestamp) : void
+    private static function cleanupTimestamp($key, $timestamp): void
     {
         $timestamp = self::getTimestamp($timestamp);
         $redis = Resque::redis();
@@ -279,7 +279,7 @@ class Scheduler
      * @return int UNIX timestamp
      * @throws InvalidTimestampException
      */
-    private static function getTimestamp($timestamp) : int
+    private static function getTimestamp($timestamp): int
     {
         if ($timestamp instanceof DateTime) {
             $timestamp = $timestamp->getTimestamp();
@@ -301,7 +301,7 @@ class Scheduler
      *      Defaults to now.
      * @return int UNIX timestamp, or false if nothing to run.
      */
-    public static function nextDelayedTimestamp($at = null) : ?int
+    public static function nextDelayedTimestamp($at = null): ?int
     {
         if ($at === null) {
             $at = time();
@@ -329,7 +329,7 @@ class Scheduler
      * @param DateTime|int $timestamp Instance of DateTime or UNIX timestamp.
      * @return mixed[] Matching job at timestamp.
      */
-    public static function nextItemForTimestamp($timestamp) : ?array
+    public static function nextItemForTimestamp($timestamp): ?array
     {
         $timestamp = self::getTimestamp($timestamp);
         $key = self::QUEUE_NAME . ':' . $timestamp;
@@ -356,7 +356,7 @@ class Scheduler
      * @return bool True if the job and class are valid.
      * @throws ResqueException
      */
-    private static function validateJob(string $class, string $queue) : bool
+    private static function validateJob(string $class, string $queue): bool
     {
         if ($class === '') {
             throw new ResqueException('Jobs must be given a class.');

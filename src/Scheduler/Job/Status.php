@@ -13,5 +13,5 @@ use Resque\Job\Status as ResqueJobStatus;
  */
 class Status extends ResqueJobStatus
 {
-    const STATUS_SCHEDULED = 63;
+    public const STATUS_SCHEDULED = 63;
 }
