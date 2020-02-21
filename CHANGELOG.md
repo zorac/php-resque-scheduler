@@ -1,5 +1,9 @@
 ##Changelog
 
+###**v2.2.4** [2020-02-21]
+
+* Code cleanup
+
 ###**v2.2.3** [2019-10-15]
 
 * Tweak composer file for php-resque
