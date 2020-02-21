@@ -1,19 +1,22 @@
 <?xml version="1.0"?>
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd"
-         name="Resque Scheduler">
+         name="Resque">
     <!-- Default files to scan if none specified -->
     <file>src</file>
 
     <!-- Force exclusion of other files for the benefit of IDEs. -->
     <exclude-pattern>bin/</exclude-pattern>
+    <exclude-pattern>demo/</exclude-pattern>
     <exclude-pattern>extras/</exclude-pattern>
+    <exclude-pattern>test/</exclude-pattern>
     <exclude-pattern>vendor/</exclude-pattern>
 
     <!-- Basic adherance to PSR-12 (extends PSR-2, implies PSR-1). -->
     <rule ref="PSR12"/>
 
     <!-- Additional code checks. -->
+    <rule ref="Generic.Arrays.ArrayIndent"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Generic.Classes.DuplicateClassName"/>
     <rule ref="Generic.CodeAnalysis"/>
@@ -22,6 +25,18 @@
     <rule ref="Generic.PHP.DiscourageGoto"/>
     <rule ref="Generic.PHP.ForbiddenFunctions"/>
     <rule ref="Generic.Strings"/>
+
+    <!-- Customizations for certain sniffs. -->
+    <rule ref="Generic.Strings.UnnecessaryStringConcat">
+        <properties>
+            <property name="allowMultiline" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
 
     <!-- Security analysis. -->
     <rule ref="./vendor/pheromone/phpcs-security-audit/Security/ruleset.xml">
