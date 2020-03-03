@@ -23,7 +23,7 @@ class Scheduler
     /**
      * @var string Current version of php-scheduler.
      */
-    public const VERSION = "2.2.4";
+    public const VERSION = "2.2.5";
 
     /**
      * @var int Default interval (in seconds) for workers to check for jobs.
@@ -46,8 +46,8 @@ class Scheduler
      * @param string $queue The name of the queue to place the job in.
      * @param string $class The name of the class that contains the code to
      *      execute the job.
-     * @param mixed[] $args Any optional arguments that should be passed when
-     *      the job is executed.
+     * @param array<mixed> $args Any optional arguments that should be passed
+     *      when the job is executed.
      * @param bool $trackStatus Set to true to be able to monitor the status of
      *      the job.
      * @return string Job ID
@@ -80,8 +80,8 @@ class Scheduler
      * @param string $queue The name of the queue to place the job in.
      * @param string $class The name of the class that contains the code to
      *      execute the job.
-     * @param mixed[] $args Any optional arguments that should be passed when
-     *      the job is executed.
+     * @param array<mixed> $args Any optional arguments that should be passed
+     *      when the job is executed.
      * @param bool $trackStatus Set to true to be able to monitor the status of
      *      the job.
      * @return string Job ID
@@ -119,7 +119,7 @@ class Scheduler
      * Directly append an item to the delayed queue schedule.
      *
      * @param DateTime|int $timestamp Timestamp job is scheduled to be run at.
-     * @param mixed[] $item Hash of item to be pushed to schedule.
+     * @param array<mixed> $item Hash of item to be pushed to schedule.
      * @return void
      */
     public static function delayedPush($timestamp, array $item): void
@@ -169,7 +169,7 @@ class Scheduler
      *
      * @param string $queue A queue name.
      * @param string $class A job class name.
-     * @param mixed[] $args Some job arguments.
+     * @param array<mixed> $args Some job arguments.
      * @return int The number of jobs that were removed.
      */
     public static function removeDelayed(
@@ -203,7 +203,7 @@ class Scheduler
      * @param DateTime|int $timestamp A timestamp.
      * @param string $queue A queue name.
      * @param string $class A job class name.
-     * @param mixed[] $args Some job arguments.
+     * @param array<mixed> $args Some job arguments.
      * @return int The number of jobs that were removed.
      */
     public static function removeDelayedJobFromTimestamp(
@@ -233,9 +233,9 @@ class Scheduler
      *
      * @param string $queue Name of the queue the job will be placed on.
      * @param string $class Name of the job class.
-     * @param mixed[] $args Array of job arguments.
+     * @param array<mixed> $args Array of job arguments.
      * @param bool $trackStatus Whether to track the job status.
-     * @return mixed[] The job properties.
+     * @return array<mixed> The job properties.
      */
     private static function jobToHash(
         string $queue,
@@ -327,7 +327,7 @@ class Scheduler
      * Pop a job off the delayed queue for a given timestamp.
      *
      * @param DateTime|int $timestamp Instance of DateTime or UNIX timestamp.
-     * @return mixed[] Matching job at timestamp.
+     * @return array<mixed> Matching job at timestamp.
      */
     public static function nextItemForTimestamp($timestamp): ?array
     {

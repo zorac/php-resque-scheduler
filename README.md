@@ -24,12 +24,14 @@ To quote the documentation for the Ruby resque-scheduler:
 > Delayed jobs are one-off jobs that you want to be put into a queue at some
 point in the future. The classic example is sending an email:
 
+```php
     require 'Resque/Resque.php';
     require 'Resque/Scheduler.php';
 
     $in = 3600;
-    $args = array('id' => $user->id);
+    $args = ['id' => $user->id];
     Scheduler::enqueueIn($in, 'email', 'SendFollowUpEmail', $args);
+```
 
 The above will store the job for 1 hour in the delayed queue, and then pull the
 job off and submit it to the `email` queue in Resque for processing as soon as
@@ -39,6 +41,7 @@ Instead of passing a relative time in seconds, you can also supply a timestamp
 as either a DateTime object or integer containing a UNIX timestamp to the
 `enqueueAt` method:
 
+```php
     require 'Resque/Resque.php';
     require 'Resque/Scheduler.php';
 
@@ -46,8 +49,9 @@ as either a DateTime object or integer containing a UNIX timestamp to the
     Scheduler::enqueueAt($time, 'email', 'SendFollowUpEmail', $args);
 
     $datetime = new DateTime('2012-03-18 13:21:49');
-    Scheduler::enqueueAt(datetime, 'email', 'SendFollowUpEmail', $args);
-
+    Scheduler::enqueueAt($datetime, 'email', 'SendFollowUpEmail', $args);
+```
+`
 NOTE: resque-scheduler does not guarantee a job will fire at the time supplied.
 At the time supplied, resque-scheduler will take the job out of the delayed
 queue and push it to the appropriate queue in Resque. Your next available Resque
