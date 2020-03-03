@@ -1,9 +1,9 @@
 {
-	"name": "zorac/php-resque-ex-scheduler",
+	"name": "zorac/php-resque-scheduler",
 	"type": "library",
-	"description": "php-resque-ex-scheduler is a PHP port of resque-scheduler, which adds support for scheduling jobs to PHP-Resque.",
+	"description": "php-resque-scheduler is a PHP port of resque-scheduler, which adds support for scheduling jobs to PHP-Resque.",
 	"keywords": ["job", "background", "redis", "resque", "queue", "php", "schedule"],
-	"homepage": "http://www.github.com/zorac/php-resque-ex-scheduler/",
+	"homepage": "http://www.github.com/zorac/php-resque-scheduler/",
 	"license": "MIT",
 	"authors": [
 		{
@@ -22,7 +22,7 @@
 		}
 	},
 	"require": {
-		"zorac/php-resque-ex": "dev-master"
+		"zorac/php-resque": "^1.2.5"
 	},
 	"conflict": {
 		"chrisboulton/php-resque-scheduler": "*",
