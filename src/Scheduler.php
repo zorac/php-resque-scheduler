@@ -23,7 +23,7 @@ class Scheduler
     /**
      * @var string Current version of php-scheduler.
      */
-    public const VERSION = "2.2.5";
+    public const VERSION = "2.2.6";
 
     /**
      * @var int Default interval (in seconds) for workers to check for jobs.
@@ -129,7 +129,7 @@ class Scheduler
         if ($json !== false) { // TODO or throw?
             $timestamp = self::getTimestamp($timestamp);
             $redis = Resque::redis();
-            $redis->rpush(self::QUEUE_NAME . ':' . $timestamp, $json);
+            $redis->rpush(self::QUEUE_NAME . ":$timestamp", $json);
             $redis->zadd(self::QUEUE_NAME, [$timestamp => $timestamp]);
         }
     }
@@ -154,7 +154,7 @@ class Scheduler
     {
         $timestamp = self::getTimestamp($timestamp);
 
-        return Resque::redis()->llen(self::QUEUE_NAME . ':' . $timestamp);
+        return Resque::redis()->llen(self::QUEUE_NAME . ":$timestamp");
     }
 
     /**
@@ -220,7 +220,7 @@ class Scheduler
         }
 
         $timestamp = self::getTimestamp($timestamp);
-        $key = self::QUEUE_NAME . ':' . $timestamp;
+        $key = self::QUEUE_NAME . ":$timestamp";
         $redis = Resque::redis();
         $count = $redis->lrem($key, 0, $json);
         self::cleanupTimestamp($key, $timestamp);
@@ -303,10 +303,10 @@ class Scheduler
      */
     public static function nextDelayedTimestamp($at = null): ?int
     {
-        if ($at === null) {
-            $at = time();
-        } else {
+        if (isset($at)) {
             $at = self::getTimestamp($at);
+        } else {
+            $at = time();
         }
 
         $items = Resque::redis()->zrangebyscore(
@@ -332,7 +332,7 @@ class Scheduler
     public static function nextItemForTimestamp($timestamp): ?array
     {
         $timestamp = self::getTimestamp($timestamp);
-        $key = self::QUEUE_NAME . ':' . $timestamp;
+        $key = self::QUEUE_NAME . ":$timestamp";
         $json = Resque::redis()->lpop($key);
 
         self::cleanupTimestamp($key, $timestamp);

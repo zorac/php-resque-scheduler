@@ -93,7 +93,7 @@ class Worker extends ResqueWorker
 
         while ($item = Scheduler::nextItemForTimestamp($timestamp)) {
             $this->log([
-                'message' => 'Moving scheduled job ' . $item['class'] . ' to ' . $item['queue'],
+                'message' => "Moving scheduled job {$item['class']} to {$item['queue']}",
                 'data' => [
                     'type' => 'movescheduled',
                     'args' => [
@@ -131,7 +131,7 @@ class Worker extends ResqueWorker
     protected function sleep(): void
     {
         $this->log([
-            'message' => 'Sleeping for ' . $this->interval,
+            'message' => "Sleeping for $this->interval",
             'data' => [
                 'type' => 'sleep',
                 'second' => $this->interval
@@ -151,7 +151,7 @@ class Worker extends ResqueWorker
     {
         if (PHP_OS != 'Darwin') { // Not suppotted on macOS
             cli_set_process_title('resque-scheduler-' . Scheduler::VERSION
-                . ': ' . $status);
+                . ": $status");
         }
     }
 }

@@ -1,5 +1,9 @@
 ##Changelog
 
+###**v2.2.6** [2020-04-21]
+
+* Code cleanup
+
 ###**v2.2.5** [2020-03-03]
 
 * Code cleanup
