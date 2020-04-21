@@ -3,6 +3,7 @@
 namespace Resque\Scheduler;
 
 use DateTime;
+use Psr\Log\LogLevel;
 use Resque\Event;
 use Resque\Resque;
 use Resque\Scheduler;
@@ -92,9 +93,10 @@ class Worker extends ResqueWorker
         $item = null;
 
         while ($item = Scheduler::nextItemForTimestamp($timestamp)) {
-            $this->log([
-                'message' => "Moving scheduled job {$item['class']} to {$item['queue']}",
-                'data' => [
+            $this->log(
+                LogLevel::INFO,
+                "Moving scheduled job {$item['class']} to {$item['queue']}",
+                [
                     'type' => 'movescheduled',
                     'args' => [
                         'timestamp' => $timestamp,
@@ -105,7 +107,7 @@ class Worker extends ResqueWorker
                         's_wait' => $timestamp - floor(isset($item['s_time']) ? $item['s_time'] : 0)
                     ]
                 ]
-            ], self::LOG_TYPE_INFO);
+            );
 
             Event::trigger('beforeDelayedEnqueue', [
                 'queue' => $item['queue'],
@@ -130,13 +132,11 @@ class Worker extends ResqueWorker
      */
     protected function sleep(): void
     {
-        $this->log([
-            'message' => "Sleeping for $this->interval",
-            'data' => [
-                'type' => 'sleep',
-                'second' => $this->interval
-            ]
-        ], self::LOG_TYPE_DEBUG);
+        $this->log(
+            LogLevel::DEBUG,
+            "Sleeping for $this->interval",
+            ['type' => 'sleep', 'second' => $this->interval]
+        );
 
         sleep($this->interval);
     }

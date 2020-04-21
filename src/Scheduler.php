@@ -23,7 +23,7 @@ class Scheduler
     /**
      * @var string Current version of php-scheduler.
      */
-    public const VERSION = "2.2.6";
+    public const VERSION = '3.0.0-alpha1';
 
     /**
      * @var int Default interval (in seconds) for workers to check for jobs.
@@ -125,13 +125,10 @@ class Scheduler
     public static function delayedPush($timestamp, array $item): void
     {
         $json = Util::jsonEncode($item);
-
-        if ($json !== false) { // TODO or throw?
-            $timestamp = self::getTimestamp($timestamp);
-            $redis = Resque::redis();
-            $redis->rpush(self::QUEUE_NAME . ":$timestamp", $json);
-            $redis->zadd(self::QUEUE_NAME, [$timestamp => $timestamp]);
-        }
+        $timestamp = self::getTimestamp($timestamp);
+        $redis = Resque::redis();
+        $redis->rpush(self::QUEUE_NAME . ":$timestamp", $json);
+        $redis->zadd(self::QUEUE_NAME, [$timestamp => $timestamp]);
     }
 
     /**
@@ -180,14 +177,11 @@ class Scheduler
         $job = self::jobToHash($queue, $class, $args);
         $json = Util::jsonEncode($job);
         $destroyed = 0;
+        $redis = Resque::redis();
 
-        if ($json !== false) { // TODO or throw?
-            $redis = Resque::redis();
-
-            foreach ($redis->keys(self::QUEUE_NAME . ':*') as $key) {
-                $key = Redis::removePrefix($key);
-                $destroyed += $redis->lrem($key, 0, $json);
-            }
+        foreach ($redis->keys(self::QUEUE_NAME . ':*') as $key) {
+            $key = Redis::removePrefix($key);
+            $destroyed += $redis->lrem($key, 0, $json);
         }
 
         return $destroyed;
@@ -214,11 +208,6 @@ class Scheduler
     ): int {
         $job = self::jobToHash($queue, $class, $args);
         $json = Util::jsonEncode($job);
-
-        if ($json === false) {
-            return 0;
-        }
-
         $timestamp = self::getTimestamp($timestamp);
         $key = self::QUEUE_NAME . ":$timestamp";
         $redis = Resque::redis();
