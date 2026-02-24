@@ -1,5 +1,12 @@
 ##Changelog
 
+###**v2.3.0** [2026-02-24]
+
+* **PHP 7.4 or later is now required.**
+* Add a new callback, `Worker::kickWatchdog` which will be triggered before
+  attempting to handle items, to allow resetting an external watchdog timer.
+* Updated PHPStan and php-cs-fixer and cleared linting issues
+
 ###**v2.2.6** [2020-04-21]
 
 * Code cleanup

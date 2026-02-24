@@ -30,6 +30,12 @@ class Worker extends ResqueWorker
     protected $blocking;
 
     /**
+     * @var callable|null If set, this callback will be triggered before each
+     *      attempt to handle items, to confirm the process is still alive.
+     */
+    public $kickWatchdog = null;
+
+    /**
      * The primary loop for a worker.
      *
      * Every $interval (seconds), the scheduled queue will be checked for jobs
@@ -52,6 +58,8 @@ class Worker extends ResqueWorker
         while (true) {
             if ($this->shutdown) {
                 break;
+            } elseif (isset($this->kickWatchdog)) {
+                ($this->kickWatchdog)();
             }
 
             $this->handleDelayedItems();
