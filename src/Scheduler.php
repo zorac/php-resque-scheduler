@@ -266,7 +266,7 @@ class Scheduler
         $timestamp = self::getTimestamp($timestamp);
         $redis = Resque::redis();
 
-        if ($redis->llen($key) == 0) {
+        if ($redis->llen($key) === 0) {
             $redis->del($key);
             $redis->zrem(self::QUEUE_NAME, (string)$timestamp);
         }
@@ -340,7 +340,7 @@ class Scheduler
         if (isset($json)) {
             $item = Util::jsonDecode($json);
 
-            if (isset($item)) {
+            if (isset($item) && is_array($item)) {
                 return $item;
             }
         }

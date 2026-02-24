@@ -92,6 +92,20 @@ class Worker extends ResqueWorker
         $item = null;
 
         while ($item = Scheduler::nextItemForTimestamp($timestamp)) {
+            if (
+                !isset($item['class'], $item['queue'], $item['args'], $item['track'])
+                || !is_string($item['class'])
+                || !is_string($item['queue'])
+                || !is_array($item['args'])
+                || !is_bool($item['track'])
+                || !isset($item['args'][0])
+                || !is_array($item['args'][0])
+                || !isset($item['args'][0]['id'])
+                || (isset($item['s_time']) && !is_numeric($item['s_time']))
+            ) {
+                continue;
+            }
+
             $this->log([
                 'message' => "Moving scheduled job {$item['class']} to {$item['queue']}",
                 'data' => [
@@ -101,8 +115,8 @@ class Worker extends ResqueWorker
                         'class' => $item['class'],
                         'queue' => $item['queue'],
                         'job_id' => $item['args'][0]['id'],
-                        'wait' => round(microtime(true) - (isset($item['s_time']) ? $item['s_time'] : 0), 3),
-                        's_wait' => $timestamp - floor(isset($item['s_time']) ? $item['s_time'] : 0)
+                        'wait' => round(microtime(true) - (isset($item['s_time']) ? $item['s_time'] : 0), 3), // @phpstan-ignore-line
+                        's_wait' => $timestamp - floor(isset($item['s_time']) ? $item['s_time'] : 0) // @phpstan-ignore-line
                     ]
                 ]
             ], self::LOG_TYPE_INFO);
@@ -149,7 +163,7 @@ class Worker extends ResqueWorker
      */
     protected function updateProcLine(string $status): void
     {
-        if (PHP_OS != 'Darwin') { // Not suppotted on macOS
+        if (PHP_OS !== 'Darwin') { // Not suppotted on macOS
             cli_set_process_title('resque-scheduler-' . Scheduler::VERSION
                 . ": $status");
         }
